@@ -42,6 +42,21 @@ QVariant MSqlQueryModel::headerData(int section, Qt::Orientation orientation, in
     return QVariant();
 }
 
+bool MSqlQueryModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    if(parent.isValid()) return false;
+
+    if (row + count > m_records.size()) return false;
+
+    beginResetModel();
+    if (count == m_records.size())
+        m_records.clear();
+    else
+        m_records = m_records.mid(0, row) + m_records.mid(row + count);
+    endResetModel();
+    return true;
+}
+
 void MSqlQueryModel::setQuery(MSqlQuery* query) {
     delete m_query; //delete old m_query
     //MSqlQuery::exec() should be called on the query object
