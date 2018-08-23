@@ -109,10 +109,22 @@ public:
     //! It just calls QSqlQueryModel::setQuery from the other thread. and blocks until the query finishes.
     void setQuery(const QString& query,  const QString& dbConnectionName = MSqlDatabase::defaultConnectionName);
 
+<<<<<<< HEAD
     //! Stops current async model executing
     void stop();
 signals:
     //! Emits after all model data fetched from query
+=======
+    //! Aborts the current background operation in the model (if any).
+    //! Please note that the SQL operation might continue in the background but
+    //! the model will not show any of the newly retrieved data after calling
+    //! this method.
+    void abort();
+
+signals:
+    //! Emits in tandem with the resultsReady signal of the underlying MSqlQuery
+    //! (i.e. when the asynchronous SQL query is executed successfully).
+>>>>>>> upstream/develop
     void resultsReady(bool success);
 private slots:
     void queryGotResults(bool success);

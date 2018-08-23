@@ -64,7 +64,11 @@ void MSqlQueryModel::setQuery(const QString &query, const QString &dbConnectionN
     queryGotResults(success);
 }
 
+<<<<<<< HEAD
 void MSqlQueryModel::stop()
+=======
+void MSqlQueryModel::abort()
+>>>>>>> upstream/develop
 {
     delete m_query;
     m_query = nullptr;
@@ -75,6 +79,7 @@ void MSqlQueryModel::setQueryAsync(const QString &query, const QString &dbConnec
     m_query = new MSqlQuery(this, MSqlDatabase::database(dbConnectionName));
     m_query->execAsync(query);
     connect(m_query, &MSqlQuery::resultsReady, this, &MSqlQueryModel::queryGotResults);
+    connect(m_query, &MSqlQuery::resultsReady, this, &MSqlQueryModel::resultsReady);
 }
 
 void MSqlQueryModel::queryGotResults(bool success){
