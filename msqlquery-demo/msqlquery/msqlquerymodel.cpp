@@ -15,8 +15,8 @@ int MSqlQueryModel::rowCount(const QModelIndex &parent) const {
 
 int MSqlQueryModel::columnCount(const QModelIndex &parent) const {
     if(parent.isValid()) return 0;
-    if(!m_records.isEmpty())
-        return m_records.first().count();
+    if(!m_lastSuccessRecord.isEmpty())
+        return m_lastSuccessRecord.count();
     else
         return 0;
 }
@@ -31,8 +31,8 @@ QVariant MSqlQueryModel::data(const QModelIndex &index, int role) const {
 QVariant MSqlQueryModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if(role == Qt::DisplayRole) {
         if(orientation == Qt::Horizontal) {
-            if(!m_records.isEmpty()) {
-                return m_records.first().fieldName(section);
+            if(!m_lastSuccessRecord.isEmpty()) {
+                return m_lastSuccessRecord.fieldName(section);
             }
         }
         if(orientation == Qt::Vertical) {
@@ -64,11 +64,7 @@ void MSqlQueryModel::setQuery(const QString &query, const QString &dbConnectionN
     queryGotResults(success);
 }
 
-<<<<<<< HEAD
-void MSqlQueryModel::stop()
-=======
 void MSqlQueryModel::abort()
->>>>>>> upstream/develop
 {
     delete m_query;
     m_query = nullptr;
@@ -87,7 +83,10 @@ void MSqlQueryModel::queryGotResults(bool success){
         //copy results to the internal m_recList
         beginResetModel();
         m_records = m_query->getAllRecords();
+        if (m_records.size())
+            m_lastSuccessRecord = m_records.first();
         endResetModel();
+
     } else {
         qCritical("MSqlQueryModel::queryGotResults success is false");
     }
